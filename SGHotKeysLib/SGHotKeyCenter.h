@@ -7,8 +7,8 @@
 //
 
 #import <Cocoa/Cocoa.h>
-
-@class SGHotKey;
+#import "SGHotKey.h"
+#import "SGKeyCombo.h"
 
 @interface SGHotKeyCenter : NSObject {
   NSMutableDictionary *hotKeys; // Keys are NSValue of EventHotKeyRef

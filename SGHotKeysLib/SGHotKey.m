@@ -14,53 +14,50 @@
 @synthesize identifier;
 @synthesize name;
 @synthesize keyCombo;
-@synthesize target;
 @synthesize action;
 @synthesize hotKeyID;
 
-- (void)dealloc {
-  [identifier release];
-  [name release];
-  [keyCombo release];
-  [super dealloc];
-}
-
 - (id)init {
-  return [self initWithIdentifier:nil keyCombo:nil];
+	return [self initWithIdentifier:nil keyCombo:nil];
 }
 
 - (id)initWithIdentifier:(id)theIdentifier keyCombo:(SGKeyCombo *)theCombo {
-  if (self = [super init]) {
-    self.identifier = theIdentifier;
-    self.keyCombo = theCombo;
-  }
-  
-  return self;  
+	if (self = [super init]) {
+		self.identifier = theIdentifier;
+		self.keyCombo = theCombo;
+	}
+
+	return self;  
 }
+
 - (id)initWithIdentifier:(id)theIdentifier keyCombo:(SGKeyCombo *)theCombo target:(id)theTarget action:(SEL)theAction {
-  if (self = [super init]) {
-    self.identifier = theIdentifier;
-    self.keyCombo = theCombo;
-    self.target = theTarget;
-    self.action = theAction;
-  }
+	if (self = [super init]) {
+		self.identifier = theIdentifier;
+		self.keyCombo = theCombo;
+		self.target = theTarget;
+		self.action = theAction;
+	}
   
-  return self;
+	return self;
 }
 
 - (BOOL)matchesHotKeyID:(EventHotKeyID)theKeyID {
-  return (hotKeyID.id == theKeyID.id) && (hotKeyID.signature == theKeyID.signature);
+	return (hotKeyID.id == theKeyID.id) && (hotKeyID.signature == theKeyID.signature);
 }
 
 - (void)invoke {
-  [self.target performSelector:self.action withObject:self];
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
+	[self.target performSelector:self.action withObject:self];
+#pragma clang diagnostic pop
 }
 
 - (void)setKeyCombo:(SGKeyCombo *)theKeyCombo {
-  if (theKeyCombo == nil)
-    theKeyCombo = [SGKeyCombo clearKeyCombo];
+	if (theKeyCombo == nil) {
+		theKeyCombo = [SGKeyCombo clearKeyCombo];
+	}
   
-  keyCombo = [theKeyCombo retain];
+	keyCombo = theKeyCombo;
 }
 
 - (NSString *)description {

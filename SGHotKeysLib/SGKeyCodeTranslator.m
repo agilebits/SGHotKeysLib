@@ -14,35 +14,35 @@
 @synthesize keyboardLayout;
 
 + (id)currentTranslator {
-  static SGKeyCodeTranslator *currentTranslator = nil;
-  TISInputSourceRef currentKeyboardLayout = TISCopyCurrentKeyboardInputSource();
-  
-  if (currentTranslator == nil) {
-    currentTranslator = [[SGKeyCodeTranslator alloc] initWithKeyboardLayout:currentKeyboardLayout];
-  } else if ([currentTranslator keyboardLayout] != currentKeyboardLayout) {
-    [currentTranslator release];
-    currentTranslator = [[SGKeyCodeTranslator alloc] initWithKeyboardLayout:currentKeyboardLayout];
-  }
-  
-  return currentTranslator;
+	static SGKeyCodeTranslator *currentTranslator = nil;
+	TISInputSourceRef currentKeyboardLayout = TISCopyCurrentKeyboardInputSource();
+
+	if (currentTranslator == nil) {
+		currentTranslator = [[SGKeyCodeTranslator alloc] initWithKeyboardLayout:currentKeyboardLayout];
+	}
+	else if ([currentTranslator keyboardLayout] != currentKeyboardLayout) {
+		currentTranslator = [[SGKeyCodeTranslator alloc] initWithKeyboardLayout:currentKeyboardLayout];
+	}
+
+	return currentTranslator;
 }
 
 - (id)initWithKeyboardLayout:(TISInputSourceRef)theLayout {
-  if ((self = [super init]) != nil) {
-    keyboardLayout = theLayout;
-    CFDataRef uchr = TISGetInputSourceProperty(keyboardLayout, kTISPropertyUnicodeKeyLayoutData);
-    keyboardLayoutData = (const UCKeyboardLayout *)CFDataGetBytePtr(uchr);
-  }  
-  
-  return self;
+	if ((self = [super init]) != nil) {
+		keyboardLayout = theLayout;
+		CFDataRef uchr = TISGetInputSourceProperty(keyboardLayout, kTISPropertyUnicodeKeyLayoutData);
+		keyboardLayoutData = (const UCKeyboardLayout *)CFDataGetBytePtr(uchr);
+	}  
+
+	return self;
 }
 
 
 - (NSString *)translateKeyCode:(short)keyCode {
-  UniCharCount maxStringLength = 4, actualStringLength;
-  UniChar unicodeString[4];
+	UniCharCount maxStringLength = 4, actualStringLength;
+	UniChar unicodeString[4];
   
-  UCKeyTranslate(keyboardLayoutData, 
+	UCKeyTranslate(keyboardLayoutData,
                            keyCode, 
                            kUCKeyActionDisplay, 
                            0, 
@@ -53,7 +53,7 @@
                            &actualStringLength, 
                            unicodeString);
   
-  return [NSString stringWithCharacters:unicodeString length:1];
+	return [NSString stringWithCharacters:unicodeString length:1];
 }
 
 @end

@@ -15,7 +15,6 @@
   NSString *name;
   
   SGKeyCombo *keyCombo;    
-  id target;
   SEL action;
   
   EventHotKeyID hotKeyID;
